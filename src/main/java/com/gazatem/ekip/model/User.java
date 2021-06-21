@@ -1,18 +1,11 @@
 package com.gazatem.ekip.model;
 
+import java.util.Date;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+import lombok.*;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -20,12 +13,14 @@ import org.springframework.data.annotation.Transient;
 
 @Entity
 @Table(name = "users")
+@Setter
+@Getter
 public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "user_id")
-	private int id;
+	private Integer id;
 	@Column(name = "email")
 	@Email(message = "*Please provide a valid Email")
 	@NotEmpty(message = "*Please provide an email")
@@ -43,64 +38,43 @@ public class User {
 	private String lastName;
 	@Column(name = "active")
 	private boolean active;
+	@Column(name = "createDate")
+	private Date createDate;
+	@Column(name = "modifiedDate")
+	private Date modifiedDate;
+	@Column(name = "image")
+	private String  image;
+
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles;
 
-	public int getId() {
-		return id;
-	}
+	@MapsId
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+	@JoinColumn(name = "id", referencedColumnName = "id")
+	private FileInfo fileInfo;
 
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
+	public User() {}
+	public User(String name, String lastName, String email, String password, boolean active, Date createDate, Date modifiedDate, String image) {
 		this.name = name;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
 		this.lastName = lastName;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public boolean isActive() {
-		return active;
-	}
-
-	public void setActive(boolean active) {
+		this.password = password;
 		this.active = active;
+		this.createDate = createDate;
+		this.modifiedDate = modifiedDate;
+		this.image = image;
 	}
 
-	public Set<Role> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(Set<Role> roles) {
+	public User(String name, String lastName, String email, String password, boolean active, Date createDate, Date modifiedDate, String image, Set <Role> roles) {
+		this.name = name;
+		this.lastName = lastName;
+		this.email = email;
+		this.password = password;
 		this.roles = roles;
+		this.active = active;
+		this.createDate = createDate;
+		this.modifiedDate = modifiedDate;
+		this.image = image;
 	}
-
 }

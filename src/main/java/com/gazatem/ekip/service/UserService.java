@@ -7,9 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface UserService {
-	public User findUserByEmail(String email);
-	public void saveUser(User user);
-	public void createUser(User user);
-	public List<User> findAll();
-	public List<Role> findAllRoles();
+	 User findUserByEmail(String email);
+	 void saveUser(User user);
+	 void createUser(User user);
+	 List<User> findAll();
+	 List<Role> findAllRoles();
+	User findById(Integer id);
 }

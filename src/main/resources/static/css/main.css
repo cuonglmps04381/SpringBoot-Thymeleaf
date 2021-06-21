@@ -1,0 +1,7 @@
+.field-icon {
+    float: right;
+    margin-left: -23px;
+    margin-top: 11px;
+    position: relative;
+    z-index: 2;
+}

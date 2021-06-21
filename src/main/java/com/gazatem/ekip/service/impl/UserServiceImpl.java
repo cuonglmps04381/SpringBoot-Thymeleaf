@@ -1,17 +1,10 @@
-package com.gazatem.ekip.service;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.transaction.Transactional;
+package com.gazatem.ekip.service.impl;
 
 import com.gazatem.ekip.model.Role;
 import com.gazatem.ekip.model.User;
 import com.gazatem.ekip.repository.RoleRepository;
 import com.gazatem.ekip.repository.UserRepository;
+import com.gazatem.ekip.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,6 +13,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.*;
 
 @Service("userService")
 public class UserServiceImpl implements UserService, UserDetailsService {
@@ -40,17 +36,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	public void createUser(User user) {
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 		user.setActive(true);
-/*		Role userRole = roleRepository.findByRole("ADMIN");
-		user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));*/
+		Role userRole = roleRepository.findByRole("ADMIN");
+		user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
 		userRepository.save(user);
 	}
 
 	@Override
 	public void saveUser(User user) {
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-		user.setActive(true);
-		Role userRole = roleRepository.findByRole("ADMIN");
-		user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
+		user.setModifiedDate(new Date());
+		user.setRoles(new HashSet<Role>(Arrays.asList(user.getRoles().stream().findAny().orElse(null))));
 		userRepository.save(user);
 	}
 
@@ -63,6 +58,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		return roleRepository.findAll();
 	}
 
+	@Override
+	public User findById(Integer id) {
+		return userRepository.findById(id);
+	}
 
 	@Override
 	@Transactional

@@ -1,18 +1,15 @@
 package com.gazatem.ekip.repository;
 
+import com.gazatem.ekip.model.FileInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.gazatem.ekip.model.User;
-
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
-	 User findByEmail(String email);
+public interface FileInfoRepository extends JpaRepository<FileInfo, String> {
 
-	@Query("select user from User user "
-			+ "where user.id = :id ")
-	User findById (@Param("id") Integer id);
-
+    @Query ("select fileInfo from  FileInfo fileInfo " +
+            "where fileInfo.id = :id")
+    FileInfo findById(@Param("id") Integer id);
 }
